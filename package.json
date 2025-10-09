@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev src/server.ts",
+    "prisma:migraion": "npx prisma migrate dev --name init",
     "build": "tsc",
     "start": "npm run prisma:migration && node dist/index.js"
   },
