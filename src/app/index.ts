@@ -1,5 +1,3 @@
-import app from "../server";
-
-app.use()
+import app from '../server'
 
 export default app
