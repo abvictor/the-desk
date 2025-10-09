@@ -1,0 +1,201 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company { 
+  id         String   @id @default(uuid())
+  email      String   @unique
+  name       String   @unique
+  password   String
+  status     Boolean
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  
+  plan       Plan?     @relation(fields: [plan_id], references: [id])
+  plan_id    String
+  
+  users      User[]
+  customers  Customer[]
+  products   Product[]
+  tickets    Ticket[]
+  
+  @@map("companies")
+}
+
+model Plan {
+  id String @id @default(uuid())
+  name String  @unique
+  pricing Decimal @db.Decimal(10, 2)
+  active Boolean @default(false) 
+
+  @@map("plans")
+
+  Company Company[]
+  PlanResources PlanResources[]
+}
+
+model Resources {
+  id   String @id @default(uuid())
+  name String @unique
+
+
+  PlanResources PlanResources[]
+  @@map("resources")
+}
+
+model PlanResources {
+  plan_id     String
+  resource_id String
+
+  plan     Plan      @relation(fields: [plan_id], references: [id])
+  resource Resources @relation(fields: [resource_id], references: [id])
+
+  @@id([plan_id, resource_id])
+  @@map("plan_resources")
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  version     String?
+  active      Boolean  @default(true)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  
+  company     Company  @relation(fields: [company_id], references: [id])
+  company_id  String
+  
+  modules     ProductModule[]
+  tickets     Ticket[]
+  
+  @@unique([name, company_id])
+  @@map("products")
+  UserProduct UserProduct[]
+}
+
+model UserProduct {
+  user       User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id    String
+  product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  product_id String
+
+  @@unique([user_id, product_id])
+  @@map("user_products")
+}
+
+model ProductModule {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  version     String?
+  active      Boolean  @default(true)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  
+  product     Product  @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  product_id  String
+  
+  tickets     Ticket[]
+  
+  @@unique([name, product_id])
+  @@map("product_modules")
+}
+
+enum UserRole {
+  ADMIN
+  OPERATIONAL
+}
+
+model User {
+  id         String    @id @default(uuid())
+  name       String
+  email      String
+  password   String? 
+  role       UserRole 
+  active     Boolean   @default(true)
+  company    Company   @relation(fields: [company_id], references: [id])
+  company_id String
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  
+  registered_tickets Ticket[] @relation("RegisteredBy")
+  solved_tickets     Ticket[] @relation("SolvedBy")
+  
+  @@unique([email, company_id])
+  @@map("users")
+  UserProduct UserProduct[]
+}
+
+model Customer {
+  id          String   @id @default(uuid())
+  name        String
+  email       String?
+  phone       String?
+  company     Company  @relation(fields: [company_id], references: [id])
+  company_id  String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  
+  tickets Ticket[]
+  @@unique([email, company_id, name])
+  @@map("customers")
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model Ticket {
+  id          Int              @id @default(autoincrement())
+  title       String
+  description String
+  priority    TicketPriority   @default(MEDIUM)
+  status      TicketStatus     @default(OPEN)
+  category    String?
+  created_at  DateTime         @default(now())
+  updated_at  DateTime         @updatedAt
+  solved_at   DateTime?
+  
+  company     Company          @relation(fields: [company_id], references: [id])
+  company_id  String
+  
+  customer    Customer         @relation(fields: [customer_id], references: [id])
+  customer_id String
+  
+  registered_by    User        @relation("RegisteredBy", fields: [registered_by_id], references: [id])
+  registered_by_id String
+  
+  solved_by    User?           @relation("SolvedBy", fields: [solved_by_id], references: [id])
+  solved_by_id String?
+  
+  product      Product?        @relation(fields: [product_id], references: [id])
+  product_id   String?
+  
+  module       ProductModule? @relation(fields: [module_id], references: [id])
+  module_id    String?
+  
+  @@index([company_id])
+  @@index([customer_id])
+  @@index([status])
+  @@index([priority])
+  @@index([product_id])
+  @@index([module_id])
+  @@index([created_at])
+  @@map("tickets")
+}
