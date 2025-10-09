@@ -10,7 +10,7 @@ import { router } from "./routes";
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: '*',
   credentials: true
 }));
 
@@ -33,4 +33,4 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     message: "Internal server error.",
   });
 });
-app.listen(3333, () => console.log("Server running"));
+
