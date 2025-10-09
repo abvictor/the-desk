@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "ts-node-dev src/server.ts",
     "build": "tsc",
-    "prisma:migration": "npx prisma migrate dev --name init",
-    "start": "npm run prisma:migration && node dist/index.js"
+    "prestart": "npm run build",
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
