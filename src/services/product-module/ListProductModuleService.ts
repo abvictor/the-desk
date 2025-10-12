@@ -17,7 +17,6 @@ class ListProductModuleService{
           id: product_id
         }
       })
-      
 
       const listAllModules = await prismaClient.productModule.findMany({
         select: {
@@ -30,18 +29,7 @@ class ListProductModuleService{
         },
       });
 
-      const modules = listAllModules.map((item) => {
-        return {
-          id: item.id,
-          module: item.name,
-          description: item.description
-        }
-      })
-
-      return {
-        name: listAllProducts.name,
-        modules: modules
-      }
+      return listAllModules;
 
     } catch (error: any) {
       console.log(error);

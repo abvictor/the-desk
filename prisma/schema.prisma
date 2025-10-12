@@ -85,7 +85,7 @@ model UserProduct {
   product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
   product_id String
 
-  @@unique([user_id, product_id])
+  @@id([user_id, product_id])
   @@map("user_products")
 }
 
@@ -167,7 +167,6 @@ model Ticket {
   description String
   priority    TicketPriority   @default(MEDIUM)
   status      TicketStatus     @default(OPEN)
-  category    String?
   created_at  DateTime         @default(now())
   updated_at  DateTime         @updatedAt
   solved_at   DateTime?

@@ -7,11 +7,16 @@ class CreateUserController {
       const { name, email, password, role, products } = req.body;
 
       const loggedUser = req.user;
-      console.log(loggedUser)
 
       if (loggedUser.role !== "ADMIN") {
         return res.status(403).json({
           message: "Apenas administradores podem criar novos usuários.",
+        });
+      }
+
+      if (!products || products.length === 0) {
+        return res.status(400).json({
+          message: "É necessário informar os produtos para o novo usuário.",
         });
       }
 
@@ -26,13 +31,15 @@ class CreateUserController {
         products
       });
 
+    
       return res.status(201).json({
         message: "Usuário criado com sucesso",
         user: user,
       });
       
     } catch (error: any) {
-      console.error("Erro:", error);
+
+      console.log(error)
 
       if (error.message.includes("e-mail")) {
         return res.status(400).json({

@@ -17,6 +17,12 @@ import { DeleteProductController } from "./controllers/product/DeleteProductCont
 import { CreateProductModuleController } from "./controllers/product-module/CreateProductModuleController";
 import { ListProductModuleController } from "./controllers/product-module/ListProductModuleController";
 import { UpdateUserController } from "./controllers/user/UpdateUserController";
+import { CreateTicketController } from "./controllers/ticket/CreateTicketController";
+import { ListAllTicketsController } from "./controllers/ticket/ListAllTicketsController";
+import { UpdateTicketController } from "./controllers/ticket/UpdateTicketController";
+import { GetTicketByIdService } from "./services/ticket/GetTicketByIdService";
+import { GetTicketByIdController } from "./controllers/ticket/GetTicketByIdController";
+import { UpdateTicketStatusController } from "./controllers/ticket/UpdateTicketStatusController";
 
 
 
@@ -57,6 +63,37 @@ router.delete("/product/delete-product/:product_id", isAuthenticated, new Delete
 //rotas de modulos
 router.post("/product-module/create-module", isAuthenticated, new CreateProductModuleController().handle);
 
+
+//rotas para tickets
+router.post(
+  "/tickets/create-ticket",
+  isAuthenticated,
+  new CreateTicketController().handle
+);
+
+router.get(
+  "/tickets/list-all",
+  isAuthenticated,
+  new ListAllTicketsController().handle
+);
+
+router.put(
+  "/tickets/update",
+  isAuthenticated,
+  new UpdateTicketController().handle
+);
+
+router.get(
+  "/tickets/:ticket_id",
+  isAuthenticated,
+  new GetTicketByIdController().handle
+);
+
+router.put(
+  "/tickets/update/status",
+  isAuthenticated,
+  new UpdateTicketStatusController().handle
+);
 
 export { router };
 

@@ -19,6 +19,7 @@ interface UserRequest {
 
 class CreateUserService {
   async execute({ email, name, password, company_id, products }: UserRequest) {
+
     const userEmailAlreadyExists = await prismaClient.user.findFirst({
       select: {
         email: true,
@@ -40,6 +41,7 @@ class CreateUserService {
     if (userEmailAlreadyExists || companyEmailAlreadyExists) {
       throw new Error("Esse e-mail já está sendo utilizado");
     }
+
 
     const userNameAlreadyExists = await prismaClient.user.findFirst({
       select: {
@@ -66,15 +68,13 @@ class CreateUserService {
       },
     });
 
-    prismaClient.userProduct.createMany({
+    await prismaClient.userProduct.createMany({
       data: products.map((product) => ({
         user_id: newUser.id,
         product_id: product.product_id,
       })),
     });
-
     
-
     return newUser;
   }
 }
