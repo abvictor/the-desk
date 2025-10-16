@@ -5,7 +5,6 @@ interface TicketRequest {
   title: string;
   description: string;
   priority: TicketPriority
-  category?: string;
   company_id: string;
   customer_id: string;
   registered_by_id: string;
@@ -14,13 +13,12 @@ interface TicketRequest {
 }
 
 class CreateTicketService {
-  async execute({ title, description, category, priority, product_id, company_id, customer_id, module_id, registered_by_id }: TicketRequest) {
+  async execute({ title, description, priority, product_id, company_id, customer_id, module_id, registered_by_id }: TicketRequest) {
 
     const createdTicket = await prismaClient.ticket.create({
       data: {
         description,
         title,
-        category,
         priority: priority,
         company_id,
         customer_id,

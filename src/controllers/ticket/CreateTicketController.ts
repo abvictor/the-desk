@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { UpdateTicketService } from "../../services/ticket/UpdateTicketService";
+import { CreateTicketService } from "../../services/ticket/CreateTicketService";
 
 class CreateTicketController {
   async handle(req: Request, res: Response) {
@@ -7,34 +7,31 @@ class CreateTicketController {
       const {
         title,
         description,
-        category,
         priority,
         product_id,
-        company_id,
         customer_id,
         module_id,
-        status,
-        registered_by_id,
-        solved_by_id,
       } = req.body;
 
-      const { ticket_id } = req.query;
+      const loggedUser = req.user;
 
-      const updateTicketService = new UpdateTicketService();
+      if(!loggedUser){
+        return res.status(403).json({
+          message: "Apenas usuários autenticados podem registrar os tickets",
+        });
+      }
 
-      const ticket = await updateTicketService.execute({
-        ticket_id: Number(ticket_id),
+      const createTicketService = new CreateTicketService();
+
+      const ticket = await createTicketService.execute({
         title,
         description,
-        category,
         priority,
         product_id,
-        company_id,
+        company_id: loggedUser.company_id,
         customer_id,
         module_id,
-        status,
-        registered_by_id,
-        solved_by_id,
+        registered_by_id: loggedUser.id,
       });
 
       return res

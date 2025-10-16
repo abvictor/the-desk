@@ -4,19 +4,20 @@ import { ListProductModuleService } from "../../services/product-module/ListProd
 class ListProductModuleController {
   async handle(req: Request, res: Response) {
     try {
-      const { product_id } = req.body;
+      const { product_id } = req.query;
       const loggedUser = req.user;
 
       if (!loggedUser) {
         return res.status(403).json({
-          message: "Apenas autenticados podem consultar os módulos",
+          message: "Apenas usuários autenticados podem consultar os módulos",
         });
       }
 
       const listProductModuleService = new ListProductModuleService();
 
+      const productId = String(product_id);
       const module = await listProductModuleService.execute({
-        product_id
+        product_id: productId,
       });
 
       res.status(200).json({

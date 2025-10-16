@@ -8,11 +8,14 @@ class UpdateTicketStatusController {
 
       const { ticket_id } = req.query;
 
+      const loggedUser = req.user
+
       const updateTicketService = new UpdateTicketStatusService();
 
       const ticket = await updateTicketService.execute({
         ticket_id: Number(ticket_id),
         status,
+        solved_by_id: loggedUser.id
       });
 
       return res

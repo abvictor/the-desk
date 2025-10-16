@@ -23,6 +23,9 @@ import { UpdateTicketController } from "./controllers/ticket/UpdateTicketControl
 import { GetTicketByIdService } from "./services/ticket/GetTicketByIdService";
 import { GetTicketByIdController } from "./controllers/ticket/GetTicketByIdController";
 import { UpdateTicketStatusController } from "./controllers/ticket/UpdateTicketStatusController";
+import { ListUserProductModuleController } from "./controllers/user/ListUserProductsController";
+import { ListAllCustomersController } from "./controllers/customer/ListAllCustomersController";
+import { FetchDashboardDataController } from "./controllers/dashboard/FetchDashboardDataController";
 
 
 
@@ -37,26 +40,19 @@ router.post("/login", new AuthUserController().handle)
 //rotas da empresa
 router.post("/create-account/company", new CreateCompanyController().handle);
 
+//rotas de cliente
+router.get("/customers/list-customers", isAuthenticated, new ListAllCustomersController().handle);
+
 
 //rotas de usuário
 router.post("/create-account/user", isAuthenticated ,new CreateUserController().handle);
 router.delete("/manage/company/users/:user_id", isAuthenticated, new DeleteUserController().handle);
 router.patch("/manage/company/users/:user_id", isAuthenticated, new UpdateUserController().handle);
-
+router.get("/users/list-user-products",isAuthenticated, new ListUserProductModuleController().handle);
 
 //rotas de produto
-router.get(
-  "/product/list-products",
-  isAuthenticated,
-  new ListProductController().handle
-);
-
-router.get(
-  "/product/list-modules",
-  isAuthenticated,
-  new ListProductModuleController().handle
-);
-
+router.get("/product/list-products", isAuthenticated, new ListProductController().handle);
+router.get("/product/list-modules", isAuthenticated, new ListProductModuleController().handle);
 router.post("/product/create-product", isAuthenticated, new CreateProductController().handle);
 router.delete("/product/delete-product/:product_id", isAuthenticated, new DeleteProductController().handle);
 
@@ -65,35 +61,15 @@ router.post("/product-module/create-module", isAuthenticated, new CreateProductM
 
 
 //rotas para tickets
-router.post(
-  "/tickets/create-ticket",
-  isAuthenticated,
-  new CreateTicketController().handle
-);
+router.post("/tickets/create-ticket", isAuthenticated, new CreateTicketController().handle);
+router.get("/tickets/list-all", isAuthenticated, new ListAllTicketsController().handle);
+router.put("/tickets/update", isAuthenticated, new UpdateTicketController().handle);
+router.get("/tickets/:ticket_id", isAuthenticated, new GetTicketByIdController().handle);
+router.put("/tickets/update/status", isAuthenticated, new UpdateTicketStatusController().handle);
 
-router.get(
-  "/tickets/list-all",
-  isAuthenticated,
-  new ListAllTicketsController().handle
-);
 
-router.put(
-  "/tickets/update",
-  isAuthenticated,
-  new UpdateTicketController().handle
-);
-
-router.get(
-  "/tickets/:ticket_id",
-  isAuthenticated,
-  new GetTicketByIdController().handle
-);
-
-router.put(
-  "/tickets/update/status",
-  isAuthenticated,
-  new UpdateTicketStatusController().handle
-);
+//rota para o dashboard
+router.get("/dashboard", isAuthenticated, new FetchDashboardDataController().handle);
 
 export { router };
 

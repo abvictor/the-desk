@@ -40,28 +40,31 @@ class ListAllTicketsService {
           status: true,
           created_at: true,
           updated_at: true,
+          product: {
+            select: {
+              name: true,
+            },
+          },
           module: {
-            select: {
-              id: true,
-              version: true,
-              product_id: true,
-            },
-          },
-          registered_by: {
-            select: {
-              id: true,
-              role: true,
-            },
-          },
-          customer: {
             select: {
               id: true,
               name: true,
             },
           },
+          registered_by: {
+            select: {
+              name: true,
+              role: true,
+            },
+          },
+          customer: {
+            select: {
+              name: true,
+            },
+          },
           solved_by: {
             select: {
-              id: true,
+              name: true,
               role: true,
             },
           },

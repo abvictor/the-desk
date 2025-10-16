@@ -4,17 +4,18 @@ import { ListAllTicketsService } from "../../services/ticket/ListAllTicketsServi
 class ListAllTicketsController {
   async handle(req: Request, res: Response) {
     try {
-      const { company_id, user_id } = req.body;
 
-      if (!user_id) {
+      const loggedUser = req.user
+
+      if (!loggedUser) {
         return res.status(401).json({ error: "Usuário não autenticado" });
       }
 
       const listAllTicketsService = new ListAllTicketsService();
 
       const tickets = await listAllTicketsService.execute({
-        company_id,
-        user_id,
+        company_id: loggedUser.company_id,
+        user_id: loggedUser.id,
       });
 
       return res.status(200).json({ tickets });
