@@ -11,7 +11,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "*",
+    origin: "https://solving-peach.vercel.app",
     credentials: true,
   })
 );
