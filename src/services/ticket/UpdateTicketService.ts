@@ -6,7 +6,6 @@ interface TicketRequest {
   title?: string;
   description?: string;
   priority?: TicketPriority;
-  category?: string;
   company_id: string;
   customer_id: string;
   registered_by_id: string;
@@ -21,7 +20,6 @@ class UpdateTicketService {
     ticket_id,
     title,
     description,
-    category,
     priority,
     product_id,
     company_id,
@@ -49,7 +47,6 @@ class UpdateTicketService {
       data: {
         description,
         title,
-        category,
         priority: priority,
         company_id,
         customer_id,

@@ -7,7 +7,6 @@ class UpdateTicketController {
       const {
         title,
         description,
-        category,
         priority,
         product_id,
         company_id,
@@ -26,7 +25,6 @@ class UpdateTicketController {
         ticket_id: Number(ticket_id),
         title,
         description,
-        category,
         priority,
         product_id,
         company_id,
